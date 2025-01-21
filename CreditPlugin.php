@@ -199,6 +199,7 @@ class CreditPlugin extends GenericPlugin
                         foreach ((array) $authors[$authorIndex++]->getData('creditRoles') as $roleUri) {
                             $roleUri = str_replace('http://', 'https://', $roleUri); // Initial release of CRediT used http:// URIs
                             $newOutput .= '<li class="creditRole" data-role="' . $roleUri . '">' . htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri) . "</li>\n";
+                            error_log('Role: ' . $roleUri);
                         }
                         $newOutput .= '</ul>';
                         return $newOutput . $matches[0];
@@ -210,6 +211,11 @@ class CreditPlugin extends GenericPlugin
             substr($output, $startOffset)
         );
     }
+
+
+
+    
+
 
     /**
      * Add roles to the contributor form
@@ -230,8 +236,12 @@ class CreditPlugin extends GenericPlugin
         // Build a list of roles for selection in the UI.
         $roleList = [];
         foreach ($this->getCreditRoles(Locale::getLocale()) as $uri => $data) {
+            error_log('Role: ' . $uri);
+            error_log('Role Name: ' . $data['name']);
+            error_log('Role Data: ' . json_encode($data, JSON_PRETTY_PRINT));
             $roleList[] = ['value' => $uri, 'label' => $data['name']];
         }
+        error_log('Role List: ' . json_encode($roleList, JSON_PRETTY_PRINT));
 
         $author = $form->_author ?? null;
 
