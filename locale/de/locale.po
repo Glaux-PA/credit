@@ -34,3 +34,6 @@ msgstr ""
 "Das CRediT Vokabular kann mit OJS auf verschiedene Arten integriert werden. "
 "Wählen Sie in diesem Formular aus, welche Integrationen genutzt werden "
 "sollen."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

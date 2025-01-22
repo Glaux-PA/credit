@@ -34,3 +34,6 @@ msgid "plugins.generic.credit.showCreditRoles"
 msgstr ""
 "Mostrar os papeis CRediT ordenado pelos nomes do autor nas páginas de "
 "destino do artigo."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

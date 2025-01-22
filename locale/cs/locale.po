@@ -33,3 +33,6 @@ msgstr ""
 
 msgid "plugins.generic.credit.showCreditRoles"
 msgstr "Zobrazení rolí CRediT podle jmen autorů na vstupních stránkách článků."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

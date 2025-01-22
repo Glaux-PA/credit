@@ -21,6 +21,7 @@
 		<p class="pkp_help">{translate key="plugins.generic.credit.settings.description"}</p>
 		{fbvFormSection list="true"}
 			{fbvElement type="checkbox" id="showCreditRoles" label="plugins.generic.credit.showCreditRoles" checked=$showCreditRoles|compare:true}
+			{fbvElement type="checkbox" id="insertMetadata" label="plugins.generic.credit.insertMetadata" checked=$insertMetadata|compare:true}
 		{/fbvFormSection}
 	{/fbvFormArea}
 	{fbvFormButtons submitText="common.save"}

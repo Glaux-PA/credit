@@ -30,3 +30,6 @@ msgstr "在論文到達頁的作者名稱旁顯示其CRediT角色。"
 
 msgid "plugins.generic.credit.description"
 msgstr "此外掛程式增加了對NISO CRediT貢獻者分類的支援。"
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

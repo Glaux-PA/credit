@@ -30,3 +30,6 @@ msgstr "CRediT语汇以多种方式与开放期刊系统互动。请使用此表
 
 msgid "plugins.generic.credit.showCreditRoles"
 msgstr "在论文登陆页的作者名称旁显示其CRediT角色。"
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

@@ -33,3 +33,6 @@ msgid "plugins.generic.credit.contributorRoles.description"
 msgstr ""
 "Моля, изберете ролите на сътрудника според <a href=\"https://credit.niso.org/"
 "\" target=\"_new\">списъка на NISO CrediT</a>."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

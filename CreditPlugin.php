@@ -164,6 +164,16 @@ class CreditPlugin extends GenericPlugin
         switch ($template) {
             case 'frontend/pages/article.tpl':
                 $templateMgr->registerFilter('output', [$this, 'articleDisplayFilter']);
+                
+                $contextId = \APP\core\Application::get()->getRequest()->getContext()->getId();
+                $insertMetadata = $this->getSetting($contextId, 'insertMetadata');
+                if ($insertMetadata) {
+                    $creditRolesXml = $this->generateCreditRolesXml($templateMgr);
+                    $templateMgr->addHeader(
+                        'creditRolesMetadata',
+                        '<meta name="credit-roles" content="' . $creditRolesXml . '" />'
+                    );                 
+                }
                 break;
         }
         return false;
@@ -199,7 +209,6 @@ class CreditPlugin extends GenericPlugin
                         foreach ((array) $authors[$authorIndex++]->getData('creditRoles') as $roleUri) {
                             $roleUri = str_replace('http://', 'https://', $roleUri); // Initial release of CRediT used http:// URIs
                             $newOutput .= '<li class="creditRole" data-role="' . $roleUri . '">' . htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri) . "</li>\n";
-                            error_log('Role: ' . $roleUri);
                         }
                         $newOutput .= '</ul>';
                         return $newOutput . $matches[0];
@@ -213,7 +222,45 @@ class CreditPlugin extends GenericPlugin
     }
 
 
-
+    public function generateCreditRolesXml($templateMgr)
+    {
+        $publication = $templateMgr->getTemplateVars('publication');
+        $authors = array_values(iterator_to_array($publication->getData('authors')));
+        $creditRoles = $this->getCreditRoles(Locale::getLocale());
+        $creditRolesEn = $this->getCreditRoles('en');
+    
+        $contribGroupXml = "<contrib-group>\n";
+        foreach ($authors as $author) {
+            $givenNames = htmlspecialchars($author->getLocalizedData('givenName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+            $surname = htmlspecialchars($author->getLocalizedData('familyName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+    
+            $contribGroupXml .= '<contrib>';
+            $contribGroupXml .= '<string-name>';
+            $contribGroupXml .= '<given-names>' . $givenNames . '</given-names>';
+            $contribGroupXml .= '<surname>' . $surname . '</surname>';
+            $contribGroupXml .= "</string-name>\n";
+    
+            foreach ((array)$author->getData('creditRoles') as $roleUri) {
+                $roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                $roleNameEn = htmlspecialchars($creditRolesEn[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                $roleTermIdentifier = htmlspecialchars($roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+    
+                $contribGroupXml .= '<role ';
+                $contribGroupXml .= 'vocab="credit" ';
+                $contribGroupXml .= 'vocab-identifier="https://credit.niso.org/" ';
+                $contribGroupXml .= 'vocab-term="' . $roleNameEn . '" ';
+                $contribGroupXml .= 'vocab-term-identifier="' . $roleTermIdentifier . '"';
+                $contribGroupXml .= '>';
+                $contribGroupXml .= $roleName;
+                $contribGroupXml .= "</role>\n";
+            }
+    
+            $contribGroupXml .= "</contrib>\n";
+        }
+        $contribGroupXml .= "</contrib-group>\n";
+    
+        return $contribGroupXml;
+    }
     
 
 
@@ -236,12 +283,8 @@ class CreditPlugin extends GenericPlugin
         // Build a list of roles for selection in the UI.
         $roleList = [];
         foreach ($this->getCreditRoles(Locale::getLocale()) as $uri => $data) {
-            error_log('Role: ' . $uri);
-            error_log('Role Name: ' . $data['name']);
-            error_log('Role Data: ' . json_encode($data, JSON_PRETTY_PRINT));
             $roleList[] = ['value' => $uri, 'label' => $data['name']];
         }
-        error_log('Role List: ' . json_encode($roleList, JSON_PRETTY_PRINT));
 
         $author = $form->_author ?? null;
 

@@ -26,3 +26,6 @@ msgid "plugins.generic.credit.contributorRoles.description"
 msgstr ""
 "Merci de sélectionner les rôles du contributeur relatif à la <a href=\"https"
 "://credit.niso.org/\" target=\"_new\">list CRediT de NISO</a>."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

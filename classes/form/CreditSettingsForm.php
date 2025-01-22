@@ -83,6 +83,7 @@ class CreditSettingsForm extends Form
         foreach (['showCreditRoles'] as $fieldName) {
             $this->setData($fieldName, $plugin->getSetting($contextId, $fieldName));
         }
+        $this->setData('insertMetadata', $plugin->getSetting($contextId, 'insertMetadata'));
     }
 
     /**
@@ -90,7 +91,7 @@ class CreditSettingsForm extends Form
      */
     public function readInputData()
     {
-        $this->readUserVars(['showCreditRoles']);
+        $this->readUserVars(['showCreditRoles', 'insertMetadata']);
     }
 
     /**
@@ -101,7 +102,7 @@ class CreditSettingsForm extends Form
         $plugin = $this->_getPlugin();
         $contextId = $this->_getContextId();
         parent::execute(...$functionArgs);
-        foreach (['showCreditRoles'] as $fieldName) {
+        foreach (['showCreditRoles', 'insertMetadata'] as $fieldName) {
             $plugin->updateSetting($contextId, $fieldName, $this->getData($fieldName));
         }
     }

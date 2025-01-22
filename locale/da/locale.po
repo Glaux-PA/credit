@@ -32,3 +32,6 @@ msgstr "Vis CRedit roller ved forfatternavne på artiklens landingsside."
 
 msgid "plugins.generic.credit.description"
 msgstr "Dette plugin tilføjer support til NISO CRediT bidrageryder ordforråd."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

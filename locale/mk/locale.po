@@ -34,3 +34,6 @@ msgstr ""
 msgid "plugins.generic.credit.showCreditRoles"
 msgstr ""
 "Прикажи CRediT улоги по имиња на автори на целните страници на написите."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"

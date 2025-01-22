@@ -36,3 +36,6 @@ msgid "plugins.generic.credit.showCreditRoles"
 msgstr ""
 "Mostrar els rols CRediT per noms d'autor/a en les pàgines de destí de "
 "l'article."
+
+msgid "plugins.generic.credit.insertMetadata"
+msgstr "Insert CRediT metadata"
