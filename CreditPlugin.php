@@ -174,6 +174,10 @@ class CreditPlugin extends GenericPlugin
                         '<meta name="credit-roles" content="' . $creditRolesXml . '" />'
                     );                 
                 }
+                if ($this->getSetting($contextId, 'insertCrossrefMetadata')) {
+                    $cfMetadataXml = $this->generateCrossrefMetadataXml($templateMgr);
+                    $templateMgr->addHeader('crossrefCreditRolesMetadata', '<meta name="crossref-credit-roles" content="' . $cfMetadataXml . '" />');
+                }
                 break;
         }
         return false;
@@ -241,8 +245,8 @@ class CreditPlugin extends GenericPlugin
             $contribGroupXml .= "</string-name>\n";
     
             foreach ((array)$author->getData('creditRoles') as $roleUri) {
-                $roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
-                $roleNameEn = htmlspecialchars($creditRolesEn[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                $roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_NOQUOTES, 'UTF-8');
+                $roleNameEn = htmlspecialchars($creditRolesEn[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_NOQUOTES, 'UTF-8');
                 $roleTermIdentifier = htmlspecialchars($roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
     
                 $contribGroupXml .= '<role ';
@@ -262,7 +266,41 @@ class CreditPlugin extends GenericPlugin
         return $contribGroupXml;
     }
     
+    public function generateCrossrefMetadataXml($templateMgr)
+    {
+        $publication = $templateMgr->getTemplateVars('publication');
+        $authors = array_values(iterator_to_array($publication->getData('authors')));
+        $creditRoles = $this->getCreditRoles(Locale::getLocale());
+    
+        // Generar el bloque XML alternativo
+        $cfMetadataXml = "";
+        foreach ($authors as $author) {
+            $givenNames = htmlspecialchars($author->getLocalizedData('givenName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+            $surname = htmlspecialchars($author->getLocalizedData('familyName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
+    
+            $cfMetadataXml .= '<person_name sequence="first" contributor_role="author">';
+            $cfMetadataXml .= '<given_name>' . $givenNames . '</given_name>';
+            $cfMetadataXml .= '<surname>' . $surname . '</surname>';
+    
+            // Añadir roles
+            foreach ((array)$author->getData('creditRoles') as $roleUri) {
+                //$roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                //$roleTermIdentifier = htmlspecialchars($roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 
+                $roleType = basename($roleUri); // Obtiene "conceptualization" de la URL
+
+                //$altMetadataXml .= '<role type="' . htmlspecialchars($roleType, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '" vocab="credit"/>';
+    
+    
+                $cfMetadataXml .= '<role type="' . $roleType . '" vocab="credit"/>';
+            }
+    
+            $cfMetadataXml .= '</person_name>';
+        }
+    
+        return $cfMetadataXml;
+    }
+    
 
     /**
      * Add roles to the contributor form

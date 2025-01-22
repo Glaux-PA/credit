@@ -41,4 +41,7 @@ msgstr ""
 "del artículo."
 
 msgid "plugins.generic.credit.insertMetadata"
-msgstr "Insertar metadata CRediT"
+msgstr "Insertar metadatos CRediT"
+
+msgid "plugins.generic.credit.insertCrossrefMetadata"
+msgstr "Insertar metadatos CRediT Crossref"

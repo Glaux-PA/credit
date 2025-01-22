@@ -32,3 +32,5 @@ msgstr "Show CRediT roles by author names on article landing pages."
 msgid "plugins.generic.credit.insertMetadata"
 msgstr "Insert CRediT metadata"
 
+msgid "plugins.generic.credit.insertCrossrefMetadata"
+msgstr "Insert CRediT Crossref metadata"
