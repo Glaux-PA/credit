@@ -9,7 +9,6 @@ It is a work in progress, started at the 2022 Helsinki sprint.
 * Adding role metadata to the publication view, using the CrossRef format.
 
 
-
 **This plugin is not complete. Do not attempt to use it if you're not sure!**
 
 Working group:

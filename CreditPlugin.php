@@ -230,40 +230,26 @@ class CreditPlugin extends GenericPlugin
     {
         $publication = $templateMgr->getTemplateVars('publication');
         $authors = array_values(iterator_to_array($publication->getData('authors')));
-        $creditRoles = $this->getCreditRoles(Locale::getLocale());
-        $creditRolesEn = $this->getCreditRoles('en');
     
-        $contribGroupXml = "<contrib-group>\n";
+        $metaTags = "";
+    
         foreach ($authors as $author) {
             $givenNames = htmlspecialchars($author->getLocalizedData('givenName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
             $surname = htmlspecialchars($author->getLocalizedData('familyName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
-    
-            $contribGroupXml .= '<contrib>';
-            $contribGroupXml .= '<string-name>';
-            $contribGroupXml .= '<given-names>' . $givenNames . '</given-names>';
-            $contribGroupXml .= '<surname>' . $surname . '</surname>';
-            $contribGroupXml .= "</string-name>\n";
+            $fullName = $givenNames . ' ' . $surname;
     
             foreach ((array)$author->getData('creditRoles') as $roleUri) {
-                $roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_NOQUOTES, 'UTF-8');
-                $roleNameEn = htmlspecialchars($creditRolesEn[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_NOQUOTES, 'UTF-8');
-                $roleTermIdentifier = htmlspecialchars($roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+                $roleType = basename($roleUri);
     
-                $contribGroupXml .= '<role ';
-                $contribGroupXml .= 'vocab="credit" ';
-                $contribGroupXml .= 'vocab-identifier="https://credit.niso.org/" ';
-                $contribGroupXml .= 'vocab-term="' . $roleNameEn . '" ';
-                $contribGroupXml .= 'vocab-term-identifier="' . $roleTermIdentifier . '"';
-                $contribGroupXml .= '>';
-                $contribGroupXml .= $roleName;
-                $contribGroupXml .= "</role>\n";
+                $metaTags .= '<meta name="DC.Contributor.Credit" ';
+                $metaTags .= 'content="' . $fullName . '" ';
+                $metaTags .= 'role-type="' . htmlspecialchars($roleType, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '" ';
+                $metaTags .= 'vocab="credit">';
+                $metaTags .= "\n";
             }
-    
-            $contribGroupXml .= "</contrib>\n";
         }
-        $contribGroupXml .= "</contrib-group>\n";
     
-        return $contribGroupXml;
+        return $metaTags;
     }
     
     public function generateCrossrefMetadataXml($templateMgr)
@@ -272,7 +258,6 @@ class CreditPlugin extends GenericPlugin
         $authors = array_values(iterator_to_array($publication->getData('authors')));
         $creditRoles = $this->getCreditRoles(Locale::getLocale());
     
-        // Generar el bloque XML alternativo
         $cfMetadataXml = "";
         foreach ($authors as $author) {
             $givenNames = htmlspecialchars($author->getLocalizedData('givenName') ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
@@ -282,16 +267,9 @@ class CreditPlugin extends GenericPlugin
             $cfMetadataXml .= '<given_name>' . $givenNames . '</given_name>';
             $cfMetadataXml .= '<surname>' . $surname . '</surname>';
     
-            // Añadir roles
             foreach ((array)$author->getData('creditRoles') as $roleUri) {
-                //$roleName = htmlspecialchars($creditRoles[$roleUri]['name'] ?? $roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
-                //$roleTermIdentifier = htmlspecialchars($roleUri, ENT_XML1 | ENT_QUOTES, 'UTF-8');
 
-                $roleType = basename($roleUri); // Obtiene "conceptualization" de la URL
-
-                //$altMetadataXml .= '<role type="' . htmlspecialchars($roleType, ENT_XML1 | ENT_QUOTES, 'UTF-8') . '" vocab="credit"/>';
-    
-    
+                $roleType = basename($roleUri);    
                 $cfMetadataXml .= '<role type="' . $roleType . '" vocab="credit"/>';
             }
     
